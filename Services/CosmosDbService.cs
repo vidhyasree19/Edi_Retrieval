@@ -42,6 +42,7 @@ namespace EdiRetrieval.Services
                 {
                     var cosmosItemModel = new CosmosItem
                     {
+                        Id=cosmosItem.id,
                         ContainerNumber = cosmosItem.containerNumber,
                         TradeType = cosmosItem.TradeType,
                         Status = cosmosItem.Status,
@@ -51,7 +52,9 @@ namespace EdiRetrieval.Services
                         Origin = cosmosItem.Origin,
                         Line = cosmosItem.Line,
                         Destination = cosmosItem.Destination,
-                        SizeType = cosmosItem.SizeType
+
+                        SizeType = cosmosItem.SizeType,
+                        Fees=cosmosItem.Fees
                     };
 
                     items.Add(cosmosItemModel);
@@ -73,45 +76,88 @@ namespace EdiRetrieval.Services
                 var response = await iterator.ReadNextAsync();
                 foreach (var item in response)
                 {
-                    return item; // Return first match from Cosmos DB
+                    return item; 
                 }
             }
 
             return null;
         }
-
-        public async Task TransferItemsToSqlAsync(string containerNumber)
+        
+    
+public async Task DeleteContainerByContainerNoAsync(string containerNumber)
         {
-            // Get items from Cosmos DB
-            var items = await GetAllItemsAsync();
-
-            // Find the specific item based on the container number
-            var itemToTransfer = items.FirstOrDefault(item => item.ContainerNumber == containerNumber);
-
-            if (itemToTransfer != null)
+            try
             {
-                // Check if the item already exists in MSSQL
-                var existingItem = await _context.CosmosItems
-                    .FirstOrDefaultAsync(i => i.ContainerNumber == itemToTransfer.ContainerNumber);
-
-                if (existingItem == null) // If it doesn't exist, add it to MSSQL
+                // Fetch the container item first to ensure it exists
+                var containerItem = await GetContainerByContainerNoAsync(containerNumber);
+                if (containerItem != null)
                 {
-                    _context.CosmosItems.Add(itemToTransfer); // Add the item to the DbSet
-                    await _context.SaveChangesAsync(); // Save the changes to MSSQL
-                    Console.WriteLine("Item added successfully.");
+                    // Deleting the item from Cosmos DB by containerNumber
+                    await _container.DeleteItemAsync<CosmosItem>(containerNumber, new PartitionKey(containerItem.ContainerNumber));
+                    _logger.LogInformation($"Container with ContainerNumber {containerNumber} deleted successfully from Cosmos DB.");
                 }
-                else // If the item already exists, show a message
+                else
                 {
-                    Console.WriteLine("Item with the specified ContainerNumber already exists.");
+                    _logger.LogWarning($"Container with ContainerNumber {containerNumber} not found.");
                 }
             }
-            else
+            catch (CosmosException ex)
             {
-                // If no item with the specified container number is found in Cosmos DB
-                throw new Exception("Item with the specified ContainerNumber not found in Cosmos DB.");
+                // Handle potential Cosmos exceptions, like NotFoundException or UnauthorizedException
+                _logger.LogError($"Error deleting container with ContainerNumber {containerNumber}: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                // Handle general exceptions
+                _logger.LogError($"An error occurred while deleting container with ContainerNumber {containerNumber}: {ex.Message}");
             }
         }
+    
 
+        // public async Task TransferItemsToSqlAsync(string containerNumber)
+        // {
+        //     var items = await GetAllItemsAsync();
+
+        //     var itemToTransfer = items.FirstOrDefault(item => item.ContainerNumber == containerNumber);
+
+        //     if (itemToTransfer != null)
+        //     {
+        //         var existingItem = await _context.CosmosItems
+        //             .FirstOrDefaultAsync(i => i.ContainerNumber == itemToTransfer.ContainerNumber);
+
+        //         if (existingItem == null) 
+        //         {
+        //             _context.CosmosItems.Add(itemToTransfer); 
+        //             await _context.SaveChangesAsync(); 
+        //             Console.WriteLine("Item added successfully.");
+        //         }
+        //         else 
+        //         {
+        //             Console.WriteLine("Item with the specified ContainerNumber already exists.");
+        //         }
+        //     }
+        //     else
+        //     {
+        //         throw new Exception("Item with the specified ContainerNumber not found in Cosmos DB.");
+        //     }
+        // }
+
+        // public async Task<IEnumerable<CosmosItem>> GetItemsByContainerNumberAsync(string containerNumber)
+        // {
+        //     try
+        //     {
+        //         var items = await _context.CosmosItems
+        //             .Where(i => i.ContainerNumber == containerNumber)
+        //             .ToListAsync();
+
+        //         return items;
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         Console.WriteLine($"Error retrieving items for container {containerNumber}: {ex.Message}");
+        //         throw;
+        //     }
+        // }
 
 
     }

@@ -18,9 +18,20 @@ builder.Services.AddSingleton<CosmosClient>(serviceProvider =>
     string primaryKey = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";  
     return new CosmosClient(endpointUri, primaryKey);
 });
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin() // Allow any origin
+                   .AllowAnyMethod() // Allow any HTTP method
+                   .AllowAnyHeader(); // Allow any HTTP header
+        });
+});
 builder.Services.AddScoped<IAuthService, AuthService>(); 
 builder.Services.AddScoped<IRegistrationService, RegistrationService>(); 
+builder.Services.AddScoped<CartService>();
+
 builder.Services.AddScoped<CosmosDbService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -48,6 +59,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("AllowAllOrigins");
 
 app.UseAuthentication();
 app.UseAuthorization();
