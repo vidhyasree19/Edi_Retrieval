@@ -18,7 +18,7 @@ public class CosmosItem
     public string Destination { get; set; }
     public string Line { get; set; }
     public string SizeType { get; set; }
-    public string Fees { get; set; }
+    public decimal Fees { get; set; }
     public bool CartAdded { get; set; }  // New field to track cart addition
 
 }

@@ -42,7 +42,7 @@ namespace EdiRetrieval.Services
                 {
                     var cosmosItemModel = new CosmosItem
                     {
-                        Id=cosmosItem.id,
+                        Id = cosmosItem.id,
                         ContainerNumber = cosmosItem.containerNumber,
                         TradeType = cosmosItem.TradeType,
                         Status = cosmosItem.Status,
@@ -54,7 +54,7 @@ namespace EdiRetrieval.Services
                         Destination = cosmosItem.Destination,
 
                         SizeType = cosmosItem.SizeType,
-                        Fees=cosmosItem.Fees
+                        Fees = cosmosItem.Fees
                     };
 
                     items.Add(cosmosItemModel);
@@ -76,15 +76,15 @@ namespace EdiRetrieval.Services
                 var response = await iterator.ReadNextAsync();
                 foreach (var item in response)
                 {
-                    return item; 
+                    return item;
                 }
             }
 
             return null;
         }
-        
-    
-public async Task DeleteContainerByContainerNoAsync(string containerNumber)
+
+
+        public async Task DeleteContainerByContainerNoAsync(string containerNumber)
         {
             try
             {
@@ -112,7 +112,37 @@ public async Task DeleteContainerByContainerNoAsync(string containerNumber)
                 _logger.LogError($"An error occurred while deleting container with ContainerNumber {containerNumber}: {ex.Message}");
             }
         }
-    
+public async Task UpdateContainerFeesToZeroAsync(string containerNumber)
+{
+    try
+    {
+        // Fetch the container based on its container number
+        var container = await GetContainerByContainerNoAsync(containerNumber);
+        
+        if (container != null)
+        {
+            // Set the fees to zero
+            container.Fees = 0;
+
+            // Replace the container document in Cosmos DB
+            await _container.ReplaceItemAsync(container, container.Id);
+            _logger.LogInformation($"Fees for container {containerNumber} set to zero in Cosmos DB.");
+        }
+        else
+        {
+            _logger.LogWarning($"Container with ContainerNumber {containerNumber} not found.");
+        }
+    }
+    catch (CosmosException ex)
+    {
+        _logger.LogError($"Error updating fees for container {containerNumber}: {ex.Message}");
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError($"An error occurred while updating fees for container {containerNumber}: {ex.Message}");
+    }
+}
+
 
         // public async Task TransferItemsToSqlAsync(string containerNumber)
         // {

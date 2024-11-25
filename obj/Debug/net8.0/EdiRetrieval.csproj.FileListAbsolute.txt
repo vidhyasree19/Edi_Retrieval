@@ -179,3 +179,8 @@ C:\Users\VidhyaSreeChinthalap\Desktop\Final_Pro\EdiRetrieval\bin\Debug\net8.0\Ne
 C:\Users\VidhyaSreeChinthalap\Desktop\Final_Pro\EdiRetrieval\bin\Debug\net8.0\runtimes\win-x64\native\Cosmos.CRTCompat.dll
 C:\Users\VidhyaSreeChinthalap\Desktop\Final_Pro\EdiRetrieval\bin\Debug\net8.0\runtimes\win-x64\native\Microsoft.Azure.Cosmos.ServiceInterop.dll
 C:\Users\VidhyaSreeChinthalap\Desktop\Final_Pro\EdiRetrieval\obj\Debug\net8.0\EdiRetrieval.sourcelink.json
+C:\Users\VidhyaSreeChinthalap\Desktop\Final_Pro\EdiRetrieval\bin\Debug\net8.0\Microsoft.Azure.Amqp.dll
+C:\Users\VidhyaSreeChinthalap\Desktop\Final_Pro\EdiRetrieval\bin\Debug\net8.0\Microsoft.Azure.ServiceBus.dll
+C:\Users\VidhyaSreeChinthalap\Desktop\Final_Pro\EdiRetrieval\bin\Debug\net8.0\Microsoft.Azure.Services.AppAuthentication.dll
+C:\Users\VidhyaSreeChinthalap\Desktop\Final_Pro\EdiRetrieval\bin\Debug\net8.0\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll
+C:\Users\VidhyaSreeChinthalap\Desktop\Final_Pro\EdiRetrieval\bin\Debug\net8.0\Microsoft.IdentityModel.Clients.ActiveDirectory.dll

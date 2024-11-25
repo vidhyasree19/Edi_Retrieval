@@ -53,6 +53,22 @@ namespace EdiRetrieval.Controllers
             await _cosmosDbService.DeleteContainerByContainerNoAsync(containerNumber);
             return Ok($"Container {containerNumber} deleted successfully.");
         }
+        [HttpPut("update-fees/{containerNumber}")]
+        // [Authorize]
+        public async Task<IActionResult> UpdateFeesToZero(string containerNumber)
+        {
+            try
+            {
+                await _cosmosDbService.UpdateContainerFeesToZeroAsync(containerNumber);
+                return Ok("Fees updated to 0 successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error updating fees: {ex.Message}");
+            }
+        }
+
+
 
         // [HttpPost("transfer/{containerNumber}")]
         // // [Authorize]
@@ -92,5 +108,6 @@ namespace EdiRetrieval.Controllers
         //         return StatusCode(500, "Internal server error while retrieving items.");
         //     }
         // }
+
     }
 }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EdiRetrieval")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b01d3629b627f2ccaa69943957599e4f0f5828ce")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0b565f33214dea9bb473ea91fa3a7d1c613668c4")]
 [assembly: System.Reflection.AssemblyProductAttribute("EdiRetrieval")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EdiRetrieval")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
